@@ -2,10 +2,14 @@ package com.learning.ai.vahanMcpServer.tools;
 
 import com.learning.ai.vahanMcpServer.model.CarSearchRequestModel;
 import com.learning.ai.vahanMcpServer.model.Cars;
+import com.learning.ai.vahanMcpServer.services.ApplicationData;
 import com.learning.ai.vahanMcpServer.services.CarSearchService;
 import org.springframework.ai.tool.annotation.Tool;
 import org.springframework.stereotype.Service;
+
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class CarSearchTool {
@@ -130,9 +134,10 @@ public class CarSearchTool {
                     Get car options based on the model year.
                     Model year, Manufactured year and Make year are same.
                     Users could ask for cars that are of the current year.
+                    It returns just the brand name and model name of the car.
                     """
     )
-    public List<Cars> getCarsOfCurrentYear(Integer modelYear, boolean isCurrentYear){
+    public Map<String, String> getCarsOfCurrentYear(Integer modelYear, boolean isCurrentYear){
         CarSearchRequestModel requestModel = new CarSearchRequestModel();
 
         requestModel.setModelYear(modelYear);
@@ -140,6 +145,32 @@ public class CarSearchTool {
         if(isCurrentYear)
             requestModel.setModelYear(2025); //Hardcoded current year, change if year changes.
 
-        return CarSearchService.getCarListBasedOnSearchCriteria(requestModel);
+        List<Cars> carsList = CarSearchService.getCarListBasedOnSearchCriteria(requestModel);
+
+        Map<String, String> response = new HashMap<>();
+
+        for(Cars cars: carsList){
+            response.put(cars.getBrand(), cars.getModel());
+        }
+
+        return response;
     }
+
+    @Tool(
+            name = "getPriceFromSpecificCarBasedOnId",
+            description = """
+                    It gets the price of the specific car using the id of the car.
+                    It returns just the price of the car.
+                    """
+    )
+    public Float getPriceOfTheCars(Integer id){
+
+        List<Cars> carsList = ApplicationData.getApplicationOnLoadData().stream().filter(
+                obj -> obj.getId().equals(id)
+        ).toList();
+
+        return carsList.get(0).getPrice();
+
+    }
+
 }

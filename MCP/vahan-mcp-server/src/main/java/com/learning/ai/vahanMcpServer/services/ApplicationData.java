@@ -38,7 +38,7 @@ public class ApplicationData {
         Cars car27 = new Cars(27, "Mahindra", "Thar", 2025,"Automatic", "Diesel", "SUV", 5,1000,"Black", 1880000f);
         Cars car28 = new Cars(28, "Mahindra", "XUV300", 2023,"Automatic", "Diesel", "SUV", 5,36000,"Red", 860000f);
         Cars car29 = new Cars(29, "Mahindra", "XUV700", 2023,"Automatic", "Diesel", "SUV", 7,62000,"Blue", 1720000f);
-        Cars car30 = new Cars(30, "Mahindra", "XUV300", 2022,"Manual", "Petrol", "SUV", 5,45000,"White", 81000f);
+        Cars car30 = new Cars(30, "Mahindra", "XUV300", 2022,"Manual", "Petrol", "SUV", 5,45000,"White", 810000f);
 
         List<Cars> carList = new ArrayList<>();
 

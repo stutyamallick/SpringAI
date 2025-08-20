@@ -7,9 +7,7 @@ import com.learning.ai.vahanMcpServer.services.CarSearchService;
 import org.springframework.ai.tool.annotation.Tool;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 public class CarSearchTool {
@@ -137,7 +135,7 @@ public class CarSearchTool {
                     It returns just the brand name and model name of the car.
                     """
     )
-    public Map<String, String> getCarsOfCurrentYear(Integer modelYear, boolean isCurrentYear){
+    public Map<String, String> getCarByModelYear(Integer modelYear, boolean isCurrentYear){
         CarSearchRequestModel requestModel = new CarSearchRequestModel();
 
         requestModel.setModelYear(modelYear);
@@ -171,6 +169,43 @@ public class CarSearchTool {
 
         return carsList.get(0).getPrice();
 
+    }
+
+    @Tool(
+            name = "getAllBrands",
+            description = """
+                    It gets all the brands that the customer can choose from.
+                    Brand and make of the car is the same thing.
+                    It returns a list of string having all the possible brands of the car.
+                    """
+    )
+    public List<String> getAllBrands(){
+        List<String> brands = new ArrayList<>();
+
+        List<Cars> carsList = ApplicationData.getApplicationOnLoadData();
+
+        for (Cars car: carsList){
+            brands.add(car.getBrand());
+        }
+
+        return brands;
+    }
+
+    @Tool(
+            name = "getCheapestCar",
+            description = """
+                    It get the detail of the car available at the least price.
+                    Car available at the least price is also the cheapest car.
+                    Return the details of car.
+                    """
+    )
+    public Cars getCheapestCar(){
+        List<Cars> carsList = ApplicationData.getApplicationOnLoadData();
+
+        carsList.sort((c1, c2) -> Float.compare(c1.getPrice(), c2.getPrice()));
+
+
+        return carsList.get(0);
     }
 
 }

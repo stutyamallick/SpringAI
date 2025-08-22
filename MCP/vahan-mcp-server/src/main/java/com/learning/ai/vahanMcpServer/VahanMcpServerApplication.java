@@ -6,6 +6,7 @@ import org.springframework.ai.tool.method.MethodToolCallbackProvider;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+import org.springframework.web.client.RestClient;
 
 @SpringBootApplication
 public class VahanMcpServerApplication {
@@ -17,6 +18,13 @@ public class VahanMcpServerApplication {
     @Bean
     public ToolCallbackProvider tools(CarSearchTool carSearchTool){
         return MethodToolCallbackProvider.builder().toolObjects(carSearchTool).build();
+    }
+
+    @Bean
+    public RestClient restClient(){
+        return RestClient.builder()
+                .baseUrl("http://localhost:8020")
+                .build();
     }
 
 

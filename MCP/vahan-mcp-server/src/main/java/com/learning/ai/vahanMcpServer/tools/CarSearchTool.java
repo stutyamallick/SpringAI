@@ -2,15 +2,18 @@ package com.learning.ai.vahanMcpServer.tools;
 
 import com.learning.ai.vahanMcpServer.model.CarSearchRequestModel;
 import com.learning.ai.vahanMcpServer.model.Cars;
-import com.learning.ai.vahanMcpServer.services.ApplicationData;
 import com.learning.ai.vahanMcpServer.services.CarSearchService;
 import org.springframework.ai.tool.annotation.Tool;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
 
 @Service
 public class CarSearchTool {
+
+    @Autowired
+    CarSearchService carSearchService;
 
     @Tool(
             name = "getAllCars",
@@ -20,11 +23,11 @@ public class CarSearchTool {
                     These are all the available options.
                     """
     )
-    public List<Cars> getCars(){
+    public List<Cars> getAllCars(){
 
         CarSearchRequestModel requestModel = new CarSearchRequestModel();
 
-        return CarSearchService.getCarListBasedOnSearchCriteria(requestModel);
+        return carSearchService.getCarsFromCoreService(requestModel);
     }
 
     @Tool(
@@ -40,7 +43,7 @@ public class CarSearchTool {
         CarSearchRequestModel requestModel = new CarSearchRequestModel();
         requestModel.setBrand(brandName);
 
-        return CarSearchService.getCarListBasedOnSearchCriteria(requestModel);
+        return carSearchService.getCarsFromCoreService(requestModel);
     }
 
 
@@ -56,7 +59,7 @@ public class CarSearchTool {
         CarSearchRequestModel requestModel = new CarSearchRequestModel();
         requestModel.setModel(modelName);
 
-        return CarSearchService.getCarListBasedOnSearchCriteria(requestModel);
+        return carSearchService.getCarsFromCoreService(requestModel);
     }
 
     @Tool(
@@ -73,7 +76,7 @@ public class CarSearchTool {
         CarSearchRequestModel requestModel = new CarSearchRequestModel();
         requestModel.setTransmissionType(transmissionType);
 
-        return CarSearchService.getCarListBasedOnSearchCriteria(requestModel);
+        return carSearchService.getCarsFromCoreService(requestModel);
     }
 
     @Tool(
@@ -90,7 +93,7 @@ public class CarSearchTool {
         CarSearchRequestModel requestModel = new CarSearchRequestModel();
         requestModel.setFuelType(fuelType);
 
-        return CarSearchService.getCarListBasedOnSearchCriteria(requestModel);
+        return carSearchService.getCarsFromCoreService(requestModel);
     }
 
     @Tool(
@@ -107,7 +110,7 @@ public class CarSearchTool {
         CarSearchRequestModel requestModel = new CarSearchRequestModel();
         requestModel.setBodyType(bodyType);
 
-        return CarSearchService.getCarListBasedOnSearchCriteria(requestModel);
+        return carSearchService.getCarsFromCoreService(requestModel);
     }
 
     @Tool(
@@ -122,7 +125,7 @@ public class CarSearchTool {
         CarSearchRequestModel requestModel = new CarSearchRequestModel();
         requestModel.setColor(color);
 
-        return CarSearchService.getCarListBasedOnSearchCriteria(requestModel);
+        return carSearchService.getCarsFromCoreService(requestModel);
     }
 
 
@@ -143,7 +146,7 @@ public class CarSearchTool {
         if(isCurrentYear)
             requestModel.setModelYear(2025); //Hardcoded current year, change if year changes.
 
-        List<Cars> carsList = CarSearchService.getCarListBasedOnSearchCriteria(requestModel);
+        List<Cars> carsList = carSearchService.getCarsFromCoreService(requestModel);
 
         Map<String, String> response = new HashMap<>();
 
@@ -163,7 +166,9 @@ public class CarSearchTool {
     )
     public Float getPriceOfTheCars(Integer id){
 
-        List<Cars> carsList = ApplicationData.getApplicationOnLoadData().stream().filter(
+        CarSearchRequestModel requestModel = new CarSearchRequestModel();
+
+        List<Cars> carsList = carSearchService.getCarsFromCoreService(requestModel).stream().filter(
                 obj -> obj.getId().equals(id)
         ).toList();
 
@@ -182,7 +187,9 @@ public class CarSearchTool {
     public List<String> getAllBrands(){
         List<String> brands = new ArrayList<>();
 
-        List<Cars> carsList = ApplicationData.getApplicationOnLoadData();
+        CarSearchRequestModel requestModel = new CarSearchRequestModel();
+
+        List<Cars> carsList = carSearchService.getCarsFromCoreService(requestModel);
 
         for (Cars car: carsList){
             brands.add(car.getBrand());
@@ -200,10 +207,12 @@ public class CarSearchTool {
                     """
     )
     public Cars getCheapestCar(){
-        List<Cars> carsList = ApplicationData.getApplicationOnLoadData();
+
+        CarSearchRequestModel requestModel = new CarSearchRequestModel();
+
+        List<Cars> carsList = carSearchService.getCarsFromCoreService(requestModel);
 
         carsList.sort((c1, c2) -> Float.compare(c1.getPrice(), c2.getPrice()));
-
 
         return carsList.get(0);
     }

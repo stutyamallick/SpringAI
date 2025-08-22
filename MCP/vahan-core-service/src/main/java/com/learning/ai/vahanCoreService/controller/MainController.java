@@ -22,7 +22,7 @@ public class MainController {
     @Autowired
     CarsRepository carsRepository;
 
-    @PostMapping("/api/cars")
+    @PostMapping("/api/core/getCars")
     public CarSearchResponseModel getCarsBasedOnSearchCriteria(@RequestBody CarSearchRequestModel request){
         Specification<Cars> spec = Specification.where(null);
 
@@ -57,7 +57,7 @@ public class MainController {
 
             else if(request.getKmDrivenValueConstraint().equalsIgnoreCase("more"))
                 spec = spec.and(CarsSpecifications.hasKmDrivenLowerLimit(request.getKmDriven()));
-            else //(request.getKmDrivenValueConstraint().equalsIgnoreCase("exact"))
+            else
                 spec = spec.and(CarsSpecifications.hasKmDrivenExact(request.getKmDriven()));
         }
 
@@ -68,7 +68,7 @@ public class MainController {
             else if(request.getPriceValueConstraint().equalsIgnoreCase("more"))
                 spec = spec.and(CarsSpecifications.hasPriceLowerLimit(request.getPrice()));
 
-            else //(request.getPriceValueConstraint().equalsIgnoreCase("exact"))
+            else
                 spec = spec.and(CarsSpecifications.hasPriceExact(request.getPrice()));
         }
 
@@ -80,7 +80,7 @@ public class MainController {
             else if(request.getModelYearValueConstraint().equalsIgnoreCase("more"))
                 spec = spec.and(CarsSpecifications.hasModelYearLowerLimit(request.getModelYear()));
 
-            else //(request.getModelYearValueConstraint().equalsIgnoreCase("exact"))
+            else
                 spec = spec.and(CarsSpecifications.hasModelYearExact(request.getModelYear()));
         }
 
@@ -92,7 +92,7 @@ public class MainController {
             else if(request.getSitingCapacityValueConstraint().equalsIgnoreCase("more"))
                 spec = spec.and(CarsSpecifications.hasSitingCapacityLowerLimit(request.getSitingCapacity()));
 
-            else //(request.getSitingCapacityValueConstraint().equalsIgnoreCase("exact"))
+            else
                 spec = spec.and(CarsSpecifications.hasSitingCapacityExact(request.getSitingCapacity()));
         }
 
@@ -111,7 +111,7 @@ public class MainController {
         return response;
     }
 
-    @GetMapping("/api/saveAppData")
+    @GetMapping("/api/core/initData")
     public String saveData(){
 
         Cars car2 = new Cars(null,"Tata", "Safari", 2024,"Automatic", "Diesel", "SUV", 7,16000,"Blue", 3500000f);
@@ -143,7 +143,7 @@ public class MainController {
         Cars car28 = new Cars(null, "Mahindra", "Thar", 2025,"Automatic", "Diesel", "SUV", 5,1000,"Black", 1880000f);
         Cars car29 = new Cars(null, "Mahindra", "XUV300", 2023,"Automatic", "Diesel", "SUV", 5,36000,"Red", 860000f);
         Cars car30 = new Cars(null, "Mahindra", "XUV700", 2023,"Automatic", "Diesel", "SUV", 7,62000,"Blue", 1720000f);
-        Cars car31 = new Cars(null, "Mahindra", "XUV300", 2022,"Manual", "Petrol", "SUV", 5,45000,"White", 81000f);
+        Cars car31 = new Cars(null, "Mahindra", "XUV300", 2022,"Manual", "Petrol", "SUV", 5,45000,"White", 810000f);
 
         List<Cars> carList = new ArrayList<>();
 

@@ -1,7 +1,7 @@
 package com.learning.ai.vahanMcpClient.model;
 
 
-public class CarRequestModel {
+public class AddCarRequestModel {
 
     private String brand;
     private String model;
@@ -14,10 +14,10 @@ public class CarRequestModel {
     private String color;
     private Float price;
 
-    public CarRequestModel() {
+    public AddCarRequestModel() {
     }
 
-    public CarRequestModel(String brand, String model, Integer modelYear, String transmissionType, String fuelType, String bodyType, Integer sitingCapacity, Integer kmDriven, String color, Float price) {
+    public AddCarRequestModel(String brand, String model, Integer modelYear, String transmissionType, String fuelType, String bodyType, Integer sitingCapacity, Integer kmDriven, String color, Float price) {
         this.brand = brand;
         this.model = model;
         this.modelYear = modelYear;

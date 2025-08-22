@@ -1,6 +1,7 @@
 package com.learning.ai.vahanCoreService.controller;
 
 import com.learning.ai.vahanCoreService.entity.Cars;
+import com.learning.ai.vahanCoreService.model.AddCarRequestModel;
 import com.learning.ai.vahanCoreService.model.CarSearchRequestModel;
 import com.learning.ai.vahanCoreService.model.CarSearchResponseModel;
 import com.learning.ai.vahanCoreService.repository.CarsRepository;
@@ -52,20 +53,20 @@ public class MainController {
 
         if(request.getKmDriven() != null) {
 
-            if(request.getKmDrivenValueConstraint().equalsIgnoreCase("less"))
+            if(request.getKmDrivenValueConstraint() != null && request.getKmDrivenValueConstraint().equalsIgnoreCase("less"))
                 spec = spec.and(CarsSpecifications.hasKmDrivenHigherLimit(request.getKmDriven()));
 
-            else if(request.getKmDrivenValueConstraint().equalsIgnoreCase("more"))
+            else if(request.getKmDrivenValueConstraint() != null && request.getKmDrivenValueConstraint().equalsIgnoreCase("more"))
                 spec = spec.and(CarsSpecifications.hasKmDrivenLowerLimit(request.getKmDriven()));
             else
                 spec = spec.and(CarsSpecifications.hasKmDrivenExact(request.getKmDriven()));
         }
 
         if(request.getPrice() != null) {
-            if(request.getPriceValueConstraint().equalsIgnoreCase("less"))
+            if(request.getPriceValueConstraint() != null && request.getPriceValueConstraint().equalsIgnoreCase("less"))
                 spec = spec.and(CarsSpecifications.hasPriceHigherLimit(request.getPrice()));
 
-            else if(request.getPriceValueConstraint().equalsIgnoreCase("more"))
+            else if(request.getPriceValueConstraint() != null && request.getPriceValueConstraint().equalsIgnoreCase("more"))
                 spec = spec.and(CarsSpecifications.hasPriceLowerLimit(request.getPrice()));
 
             else
@@ -74,10 +75,10 @@ public class MainController {
 
         if(request.getModelYear() != null) {
 
-            if(request.getModelYearValueConstraint().equalsIgnoreCase("less"))
+            if(request.getModelYearValueConstraint() != null && request.getModelYearValueConstraint().equalsIgnoreCase("less"))
                 spec = spec.and(CarsSpecifications.hasModelYearHigherLimit(request.getModelYear()));
 
-            else if(request.getModelYearValueConstraint().equalsIgnoreCase("more"))
+            else if(request.getModelYearValueConstraint() != null && request.getModelYearValueConstraint().equalsIgnoreCase("more"))
                 spec = spec.and(CarsSpecifications.hasModelYearLowerLimit(request.getModelYear()));
 
             else
@@ -86,10 +87,10 @@ public class MainController {
 
         if(request.getSitingCapacity() != null) {
 
-            if(request.getSitingCapacityValueConstraint().equalsIgnoreCase("less"))
+            if(request.getSitingCapacityValueConstraint() != null && request.getSitingCapacityValueConstraint().equalsIgnoreCase("less"))
                 spec = spec.and(CarsSpecifications.hasSitingCapacityHigherLimit(request.getSitingCapacity()));
 
-            else if(request.getSitingCapacityValueConstraint().equalsIgnoreCase("more"))
+            else if(request.getSitingCapacityValueConstraint() != null && request.getSitingCapacityValueConstraint().equalsIgnoreCase("more"))
                 spec = spec.and(CarsSpecifications.hasSitingCapacityLowerLimit(request.getSitingCapacity()));
 
             else
@@ -181,5 +182,22 @@ public class MainController {
         carsRepository.saveAll(carList);
 
         return "SAVED";
+    }
+
+    @PostMapping("/api/core/addCar")
+    public String addCar(@RequestBody AddCarRequestModel req){
+        Cars car = new Cars(
+                null, req.getBrand(), req.getModel(), req.getModelYear(),
+                req.getTransmissionType(), req.getFuelType(), req.getBodyType(),
+                req.getSitingCapacity(), req.getKmDriven(), req.getColor(), req.getPrice()
+        );
+
+        try {
+            carsRepository.save(car);
+            return "Car saved successfully";
+
+        } catch (Exception e) {
+            return null;
+        }
     }
 }

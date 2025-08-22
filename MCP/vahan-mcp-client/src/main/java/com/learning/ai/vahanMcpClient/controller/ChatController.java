@@ -1,17 +1,21 @@
 package com.learning.ai.vahanMcpClient.controller;
 
 
-import com.learning.ai.vahanMcpClient.model.CarRequestModel;
+import com.learning.ai.vahanMcpClient.model.AddCarRequestModel;
 import org.springframework.ai.chat.client.ChatClient;
-import org.springframework.ai.chat.memory.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.RestClient;
 
 @RestController
 public class ChatController {
 
     @Autowired
     ChatClient chatClient;
+
+    @Autowired
+    RestClient restClient;
 
     @GetMapping("/api/chat")
     public String chat(@RequestParam String prompt) {
@@ -20,7 +24,7 @@ public class ChatController {
     }
 
     @PostMapping("/api/car/add")
-    public String addCar(@RequestBody CarRequestModel carRequestModel){
+    public String addCar(@RequestBody AddCarRequestModel addCarRequestModel){
 
         String validationLogic = """
                 Analyze the following request data for potential issues.
@@ -36,8 +40,23 @@ public class ChatController {
                 Field price can be any numeric value. Decimal values are allowed.
                 """;
 
-        String prompt = String.format(validationLogic + carRequestModel.toString());
+        String prompt = String.format(validationLogic + addCarRequestModel.toString());
 
-        return chatClient.prompt().user(prompt).call().content();
+        String aiValidation = chatClient.prompt().user(prompt).call().content();
+
+        String response = null;
+
+        assert aiValidation != null;
+        if(aiValidation.equalsIgnoreCase("OK")){
+            response = restClient.post()
+                    .uri("/api/core/addCar")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .body(addCarRequestModel)
+                    .retrieve()
+                    .body(String.class);
+        }
+
+
+        return response == null ? aiValidation : response;
     }
 }

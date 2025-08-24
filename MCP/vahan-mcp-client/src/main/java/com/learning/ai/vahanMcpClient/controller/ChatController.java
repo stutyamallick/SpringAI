@@ -2,11 +2,15 @@ package com.learning.ai.vahanMcpClient.controller;
 
 
 import com.learning.ai.vahanMcpClient.model.AddCarRequestModel;
+import com.learning.ai.vahanMcpClient.model.Cars;
 import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestClient;
+
+import java.util.List;
 
 @RestController
 public class ChatController {
@@ -21,6 +25,14 @@ public class ChatController {
     public String chat(@RequestParam String prompt) {
 
         return chatClient.prompt().user(prompt).call().content();
+    }
+
+    @GetMapping("/api/v2/chat")
+    public List<Cars> v2Chat(@RequestParam String prompt) {
+
+        return chatClient.prompt().user(prompt).call().entity(
+                new ParameterizedTypeReference<List<Cars>>() {
+                });
     }
 
     @PostMapping("/api/car/add")

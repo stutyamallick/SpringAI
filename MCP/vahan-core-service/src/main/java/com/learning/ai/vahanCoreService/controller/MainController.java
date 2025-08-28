@@ -1,7 +1,6 @@
 package com.learning.ai.vahanCoreService.controller;
 
 import com.learning.ai.vahanCoreService.entity.Cars;
-import com.learning.ai.vahanCoreService.model.AddCarRequestModel;
 import com.learning.ai.vahanCoreService.model.CarSearchRequestModel;
 import com.learning.ai.vahanCoreService.model.CarSearchResponseModel;
 import com.learning.ai.vahanCoreService.repository.CarsRepository;
@@ -184,20 +183,9 @@ public class MainController {
         return "SAVED";
     }
 
-    @PostMapping("/api/core/addCar")
-    public String addCar(@RequestBody AddCarRequestModel req){
-        Cars car = new Cars(
-                null, req.getBrand(), req.getModel(), req.getModelYear(),
-                req.getTransmissionType(), req.getFuelType(), req.getBodyType(),
-                req.getSitingCapacity(), req.getKmDriven(), req.getColor(), req.getPrice()
-        );
-
-        try {
-            carsRepository.save(car);
-            return "Car saved successfully";
-
-        } catch (Exception e) {
-            return null;
-        }
+    @PostMapping("/api/core/addNewCar")
+    public String addNewCar(@RequestBody Cars cars){
+        carsRepository.save(cars);
+        return "Saved";
     }
 }

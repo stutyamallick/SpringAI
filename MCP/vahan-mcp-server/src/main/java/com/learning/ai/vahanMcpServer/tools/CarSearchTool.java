@@ -217,4 +217,48 @@ public class CarSearchTool {
         return carsList.get(0);
     }
 
+    @Tool(
+            name = "addNewCar",
+            description = """
+                    Use this tool to add a new car to the existing list of available cars.
+                    User needs to pass all the required information to add a car to database.
+                    Brand, Model, model year, transmission type, body type, fuel type, siting capacity,
+                    km driven, color and price are to be provided to add a car.
+                    If any one is absent, let user know through appropriate error message.
+                    -------------------
+                    Validations-
+                    None of the values should be empty or null.
+                    Value for fields brand, model, color can be anything.
+                    Field modelYear should be numeric only and of 4 characters.
+                    Field sitingCapacity should be a single character numeric value only with allowed values being 5 or 7.
+                    Allowed values for Field transmissionType are Automatic and Manual.
+                    Allowed values for field fuelType are Petrol and Diesel.
+                    Allowed values for field bodyType sre Hatchback, Sedan, SUV and MUV.
+                    Field kmDriven can be any numeric value but decimal values are not allowed.
+                    Field price can be any numeric value. Decimal values are allowed.
+                    If validation fails, let user know through appropriate error message.
+                    -------------------
+                    Sample prompt will be like-
+                    Add a car: red tata altroz, hatchback, with a sitting capacity of 5, km driven is 23000, petrol car, manual transmission, and price is 455000
+                    Here color is red, brand is tata, model is altroz and so on..
+                    """
+    )
+    public String addNewCar(
+            String brand, String model, Integer modelYear,
+            String transmissionType, String fuelType, String bodyType,
+            Integer sitingCapacity, Integer kmDriven,
+            String color, Float price
+    ){
+        Cars addCarRequest = new Cars(
+                null, brand, model, modelYear, transmissionType,
+                fuelType, bodyType, sitingCapacity, kmDriven, color, price
+        );
+
+        return carSearchService.addNewCar(addCarRequest);
+    }
+
+    /*
+    * add a new car: silver color 2018 manual petrol Suzuki Alto. It is a hatchback with siting capacity of 5 people, 43500 km driven and price is 175000
+    * */
+
 }

@@ -1,15 +1,20 @@
-package com.learning.ai.vahanCoreService.model;
+package com.learning.ai.vahan.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import lombok.*;
 
-@Getter
-@Setter
+@Entity
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class AddCarRequestModel {
+public class Cars {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer id;
 
     private String brand;
     private String model;
@@ -21,5 +26,4 @@ public class AddCarRequestModel {
     private Integer kmDriven;
     private String color;
     private Float price;
-
 }

@@ -29,4 +29,13 @@ public class CarSearchService {
         return response.getCarsList();
     }
 
+    public String addNewCar(Cars cars){
+        return restClient.post()
+                .uri("/api/core/addNewCar")
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(cars)
+                .retrieve()
+                .body(String.class);
+    }
+
 }

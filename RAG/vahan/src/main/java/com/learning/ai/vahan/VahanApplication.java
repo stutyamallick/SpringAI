@@ -1,12 +1,13 @@
-package com.learning.ai.vahanMcpClient;
+package com.learning.ai.vahan;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class VahanMcpClientApplication {
+public class VahanApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(VahanMcpClientApplication.class, args);
+		SpringApplication.run(VahanApplication.class, args);
 	}
+
 }

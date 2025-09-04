@@ -3,7 +3,6 @@ package com.learning.ai.vahan.controller;
 import com.learning.ai.vahan.entity.Cars;
 import com.learning.ai.vahan.repository.CarsRepository;
 import org.springframework.ai.chat.client.ChatClient;
-import org.springframework.ai.chat.client.advisor.vectorstore.QuestionAnswerAdvisor;
 import org.springframework.ai.chat.messages.UserMessage;
 import org.springframework.ai.chat.prompt.Prompt;
 import org.springframework.ai.chat.prompt.SystemPromptTemplate;
@@ -35,7 +34,6 @@ public class ChatController {
                           CarsRepository carsRepository) {
         this.carsRepository = carsRepository;
         this.chatClient = chatClientBuilder
-                .defaultAdvisors(new QuestionAnswerAdvisor(vectorStore))
                 .build();
         this.vectorStore = vectorStore;
     }

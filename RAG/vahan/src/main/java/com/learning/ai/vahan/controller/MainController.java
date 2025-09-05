@@ -2,7 +2,8 @@ package com.learning.ai.vahan.controller;
 
 import com.learning.ai.vahan.entity.Cars;
 import com.learning.ai.vahan.repository.CarsRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.ai.document.Document;
+import org.springframework.ai.vectorstore.VectorStore;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -12,8 +13,13 @@ import java.util.List;
 @RestController
 public class MainController {
 
-    @Autowired
-    CarsRepository carsRepository;
+    private final CarsRepository carsRepository;
+    private final VectorStore vectorStore;
+
+    public MainController(CarsRepository carsRepository, VectorStore vectorStore) {
+        this.carsRepository = carsRepository;
+        this.vectorStore = vectorStore;
+    }
 
     @GetMapping("/api/getAllCars")
     public List<Cars> getAllCars(){
@@ -88,6 +94,23 @@ public class MainController {
 
         carsRepository.saveAll(carList);
 
-        return "SAVED";
+        return "Cars Data saved";
+    }
+
+    @GetMapping("/api/loadVectorStore")
+    public String loadVectorStore(){
+
+        List<Cars> cars = carsRepository.findAll();
+
+        List<Document> documentList = new ArrayList<>();
+
+        for(Cars car: cars) {
+            Document document = new Document(car.toString());
+            documentList.add(document);
+        }
+
+        vectorStore.add(documentList);
+
+        return "Vector Store Loaded";
     }
 }

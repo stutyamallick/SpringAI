@@ -1,7 +1,5 @@
 package com.learning.ai.vahan.controller;
 
-import com.learning.ai.vahan.entity.Cars;
-import com.learning.ai.vahan.repository.CarsRepository;
 import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.ai.chat.messages.UserMessage;
 import org.springframework.ai.chat.prompt.Prompt;
@@ -15,7 +13,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -25,14 +22,11 @@ public class ChatController {
 
     private final ChatClient chatClient;
     private final VectorStore vectorStore;
-    private final CarsRepository carsRepository;
 
     @Value("classpath:/prompts/rag-prompt.st")
     private Resource ragPromptTemplate;
 
-    public ChatController(ChatClient.Builder chatClientBuilder, VectorStore vectorStore,
-                          CarsRepository carsRepository) {
-        this.carsRepository = carsRepository;
+    public ChatController(ChatClient.Builder chatClientBuilder, VectorStore vectorStore) {
         this.chatClient = chatClientBuilder
                 .build();
         this.vectorStore = vectorStore;
@@ -40,15 +34,6 @@ public class ChatController {
 
     @GetMapping("/api/chat")
     public String chat(@RequestParam String query){
-        List<Cars> cars = carsRepository.findAll();
-
-        List<Document> documentList = new ArrayList<>();
-        for(Cars car: cars) {
-            Document document = new Document(car.toString());
-            System.out.println(document);
-            documentList.add(document);
-        }
-        vectorStore.add(documentList);
 
         List<Document> similarDocuments = vectorStore
                 .similaritySearch(SearchRequest
@@ -73,4 +58,6 @@ public class ChatController {
 
         return chatClient.prompt(prompt).call().content();
     }
+
+    /* do you something which is automatic and from Toyota and i don't want any sedan or hatchback*/
 }

@@ -3,7 +3,12 @@ package com.learning.ai.vahan.controller;
 import com.learning.ai.vahan.entity.Cars;
 import com.learning.ai.vahan.repository.CarsRepository;
 import org.springframework.ai.document.Document;
+import org.springframework.ai.reader.tika.TikaDocumentReader;
+import org.springframework.ai.transformer.splitter.TextSplitter;
+import org.springframework.ai.transformer.splitter.TokenTextSplitter;
 import org.springframework.ai.vectorstore.VectorStore;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.Resource;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -15,6 +20,9 @@ public class MainController {
 
     private final CarsRepository carsRepository;
     private final VectorStore vectorStore;
+
+    @Value("classpath:/documents/backup/Flight_Boarding_Pass.pdf")
+    private Resource boardingPass;
 
     public MainController(CarsRepository carsRepository, VectorStore vectorStore) {
         this.carsRepository = carsRepository;
@@ -97,7 +105,7 @@ public class MainController {
         return "Cars Data saved";
     }
 
-    @GetMapping("/api/loadVectorStore")
+    @GetMapping("/api/loadVectorStore-cars")
     public String loadVectorStore(){
 
         List<Cars> cars = carsRepository.findAll();
@@ -111,6 +119,17 @@ public class MainController {
 
         vectorStore.add(documentList);
 
-        return "Vector Store Loaded";
+        return "Vector Store Loaded For Cars";
+    }
+
+    @GetMapping("/api/loadVectorStore-pdf")
+    public String loadVectorForPdf(){
+        var pdfReader = new TikaDocumentReader(boardingPass);
+
+        TextSplitter textSplitter = new TokenTextSplitter();
+
+        vectorStore.accept(textSplitter.apply(pdfReader.get()));
+
+        return "Vector Store Loaded For PDF.";
     }
 }
